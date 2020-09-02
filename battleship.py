@@ -1,15 +1,14 @@
 import os
 
 userMap = [['.' for x in range(11)] for y in range(11)]
-computerMap = [['.' for x in range(10)] for y in range(10)]
-ships = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]]
+computerMap = [['.' for x in range(11)] for y in range(11)]
+SHIPS = [["Carrier", 5], ["Battleship", 4], ["Cruiser", 3], ["Submarine", 3], ["Destroyer", 2]]
 
 def createMap(map):
 	#blank top left
 	map[0][0] = "  "
-	#ascii base letter
-	letter = 64
 	#create alpha column header
+	letter = 64
 	for col in range(1, 11):
 		map[0][col] = chr(letter + col)
 	#create numeric row header
@@ -18,37 +17,30 @@ def createMap(map):
 	
 
 def printScreen(map):
-	#os.system('cls')
-	'''for x in range(11):
-		if x == 0:
-			print("    ", end='')
-		else:
-			print(str("{:02d}".format(map[x][0])) + "  ", end='')
-		for y in range(1, 11):
-			print(str(map[y][x]) + " ", end='')
-		print("")'''
 	for row in map:
 		for value in row:
 			print(str(value) + " ", end='')
 		print('')
 		
 def placeShips(map):
-	for ship in ships:
+	for ship in SHIPS:
 		while True:
 			name, length = ship[0], ship[1]
 			#prompt for ship's coordinates
-			head = input("Where would you like to place the " + name + " (" + str(length) + " spaces)?  Use the format LETTERNUMBER (e.g. B5): ")
+			shipHead = input("Where would you like to place the " + name + " (" + str(length) + " spaces)?  Use the format LETTERNUMBER (e.g. B5): ")
 			#assign to x and y coords
-			col, row = ord(head.upper()[:1]) - 64, int(head[1:])
-			print("col=" + str(col))
+			col = ord(shipHead.upper()[:1]) - 64
+			row = int(shipHead[1:])
 			#get ship direction
+			print("col= " + str(col) + " row= " + str(row))
 			dir = input("Down or Right: ").lower()
-			if 0 < col < 11 and 0 < row < 11 and 0 < col + length < 11 and shipOnFreeSpace(col, row, length, map, dir):
+			if shipOnFreeSpace(col, row, length, map, dir):
 				break
 			else:
 				print("Invalid coordinates, please try again")
+        placeShip(col, row, length, map, dir)
+		'''
 		i = 0
-		print("col= " + str(col) + " row= " + str(row))
 		if dir == "down":
 			while(i < length):
 				map[row + i][col] = u"\u25A0"
@@ -57,22 +49,41 @@ def placeShips(map):
 			while(i < length):
 				map[row][col + i] = u"\u25A0"
 				i += 1
+        '''
 		printScreen(map)
 					
-
+#if each space we place a ship is not free or valid, return false
 def shipOnFreeSpace(col, row, len, map, dir):
-	i = 0
-	if dir == "down":
-		while i < len:
-			if map[row][col + i] != '.':
-				return False
-			i += 1
-	elif dir == "right":
-		while i < len:
-			if map[row + i][col] != '.':
-				return False;
-			i += 1			
-	return True
+    print("in")
+    if dir == "down":
+        print("2")
+        try:
+            for i in range(len):
+                print(' row= ' + str(row + i) + 'col= ' + str(col) + ' space= ' + str(map[row+i][col]))
+                if map[row + i][col] != '.':
+                    return False
+        except:
+            return False
+    elif dir == "right":
+        try:
+            for i in range(len):
+                print(' row= ' + str(row) + 'col= ' + str(col+i) + ' space= ' + str(map[row][col+i]))
+                if map[row][col + i] != '.':
+                    return False
+        except:
+            return False
+    return True
+
+def placeShip(col, row, len, map, dir):
+    if dir == "down":
+        for i in range(len):
+            map[row + i][col] = u"\u25A0"
+    elif dir == "right":
+        for i in range(len)
+            map[row][col + i] = u"\u25A0"
+
+def createRandomBoard():
+    return 0
 		
 os.system('cls')
 createMap(userMap)
