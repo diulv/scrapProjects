@@ -35,17 +35,28 @@ def placeShips(map):
         while True:
             name, length = ship[0], ship[1]
             #prompt for ship's coordinates
-            shipHead = input("Where would you like to place the " + name + " (" + str(length) + " spaces)?  Use the format LETTERNUMBER (e.g. B5): ")
-            #assign to x and y coords
-            col = ord(shipHead.upper()[:1]) - 64
-            row = int(shipHead[1:])
+            while True:
+                shipHead = input("Where would you like to place the " + name + " (" + str(length) + " spaces)?  Use the format LETTERNUMBER (e.g. B5): ")
+                try:
+                    #assign to x and y coords
+                    col = ord(shipHead.upper()[:1]) - 64
+                    row = int(shipHead[1:])
+                except:
+                    print('Invalid coordinates')
+                if 0 < col < 11 and 0 < row < 11:
+                    break
+                print('Invalid coordinates')
             #get ship direction
-            print("col= " + str(col) + " row= " + str(row))
-            dir = input("Down or Right: ").lower()
+            while True:
+                print("col= " + str(col) + " row= " + str(row))
+                dir = input("Down or Right: ").lower()
+                if dir == "right" or dir == "down":
+                    break
+                print('Invalid direction')
             if shipOnFreeSpace(col, row, length, map, dir):
                 break
             else:
-                print("Invalid coordinates, please try again")
+                print("Ship is not on a valid space, please try again")
         placeShip(col, row, length, map, dir)
         printScreen(map, userTargetGrid)
                     
