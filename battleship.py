@@ -63,7 +63,7 @@ def placeShips(grid):
         printScreen(grid, userTargetGrid)
                     
 #if each space we place a ship is not free or valid, return false
-def shipOnFreeSpaces(col, row, len, grid, dir):
+def shipOnFreeSpace(col, row, len, grid, dir):
     print("in")
     if dir == "down":
         print("2")
@@ -103,26 +103,87 @@ def createRandomGrid(grid):
             else:
                 dir = "right"
                 print("col= " + str(col) + " row= " + str(row) + "dir= " + str(dir))
-            if shipOnFreeSpaces(col, row, length, grid, dir):
+            if shipOnFreeSpace(col, row, length, grid, dir):
                 break
         placeShip(col, row, length, grid, dir)
         
         
-#game
-    #turn
-        #player guesses space
-        #if correct, write X on computerPrimaryGrid and playerTargetGrid
-        #if wrong, write O on computerPrimaryGrid and playerTargetGrid
-        #if 
+def gameplay():
+    while True:
+        playerTurn()
+        if isGameOver(computerPrimaryGrid):
+            print("You have won battleship!")
+            break
+        computerTurn()
+        if isGameOver(userPrimaryGrid):
+            print("You have won battleship!")
+            break
+        printScreen(userPrimaryGrid, userTargetGrid)
         
+def playerTurn():
+    while True:
+        guess = input("Where would you like shoot?  Use the format LETTERNUMBER (e.g. B5): ")
+        try:
+            col = ord(guess.upper()[:1]) - 64
+            row = int(guess[1:])
+            
+        except:
+            print('Invalid coordinates')
+        if 0 < col < 11 and 0 < row < 11 and userTargetGrid[row][col] == '.':
+            break
+        print('Invalid coordinates')
+    playerFireMissile(col, row)
 
-os.system('cls')
+def playerFireMissile(col, row):
+    if computerPrimaryGrid[row][col] == u"\u25A0":
+        print("It's a hit at " + str(chr(64+col)) + str(row) + "!")
+        computerPrimaryGrid[row][col] = 'X'
+        userTargetGrid[row][col] = 'X'
+    else:
+        print("It's a miss at " + str(chr(64+col)) + str(row))
+        computerPrimaryGrid[row][col] = 'O'
+        userTargetGrid[row][col] = 'O'
+        
+def computerTurn():
+    while True:
+        col = random.randrange(1,11)
+        row = random.randrange(1,11)
+        if computerTargetGrid[row][col] == '.':
+            break
+    computerFireMissile(col, row)
+    
+def computerFireMissile(col, row):
+    if userPrimaryGrid[row][col] == u"\u25A0":
+        print("You've been hit at " + str(chr(64+col)) + str(row) + "!")
+        userPrimaryGrid[row][col] = 'X'
+        computerTargetGrid[row][col] = 'X'
+    else:
+        print("Computer misses at " + str(chr(64+col)) + str(row))
+        userPrimaryGrid[row][col] = 'O'
+        computerTargetGrid[row][col] = 'O'
+        
+def isGameOver(grid):
+    for row in grid:
+        for value in row:
+            if value == u"\u25A0":
+                return False
+    return True
+
+'''def main():
+    while True:
+        gameSetup()
+        gameplay()
+        playAgain = input('Would you like to play again? Y/N')
+        if playAgain.upper() != "Y":
+            exit()'''
+    
+os.system('clear')
 createMap(userPrimaryGrid)
 createMap(userTargetGrid)
 createMap(computerPrimaryGrid)
+createMap(computerTargetGrid)
 createRandomGrid(computerPrimaryGrid)
-printScreen(computerPrimaryGrid, computerTargetGrid)
-input(" stop")
 printScreen(userPrimaryGrid, userTargetGrid)
 placeShips(userPrimaryGrid)
+gameplay()
 #print(userMap)
