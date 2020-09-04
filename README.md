@@ -5,5 +5,5 @@ A landfill for Python projects:
 Single player game based on the [board game](https://en.wikipedia.org/wiki/Battleship_(game)).
 
 TODO:
-	Fix sloppy main function
-	Create a Player class to house grids
+    Fix sloppy main function
+    Create a Player class to house grids
